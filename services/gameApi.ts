@@ -8,7 +8,6 @@ export async function fetchGamesByGenre(genre: string): Promise<Game[]> {
   const response = await fetch(url);
   const json = await response.json();
 
-
   const games: Game[] = json.results.map((g: any) => ({
     id: g.id,
     name: g.name,
