@@ -3,6 +3,7 @@ export type Game = {
     name: string;
     rating: number;
     released: string | null;
+    image: string | null;
     backgroundImage: string | null;
   };
   

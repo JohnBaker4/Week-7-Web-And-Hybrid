@@ -1,45 +1,78 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Pressable } from 'react-native';
-import { useGamePicker } from './hooks/useGames';
+import { SafeAreaView, Text, Pressable, StyleSheet } from "react-native";
+import { useState } from "react";
+import GenreSelect from "./components/GenreSelect";
+import GameCard from "./components/GameCard";
+import { useGamePicker } from "./hooks/useGames";
 
 export default function App() {
+  const [genre, setGenre] = useState<string | null>(null);
   const { game, loading, error, pickGame } = useGamePicker();
 
-
   return (
-    <View style={styles.container}>
-      <Pressable onPress={() => pickGame("action")} style={styles.button}>
-        <Text style={styles.buttonText}>Pick a game</Text>
-      </Pressable>
-      {loading && <Text>Loading...</Text>}
-      {game && <Text>{game.name}</Text>}
-      {error && <Text style={{ color: 'red' }}>{error}</Text>}
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>Random Game Picker</Text>
+      <Text style={styles.slogan}>For your random game-picking needs.</Text>
+      <Text style={styles.subtext}>Pick as many times as you like. 
+        Shown games are sorted into history to avoid getting the same game multiple times.</Text>
 
-      <StatusBar style="auto" />
-    </View>
+      <GenreSelect selected={genre} onSelect={setGenre} />
+
+      <Pressable
+        style={styles.pickButton}
+        onPress={() => genre && pickGame(genre)}
+      >
+        <Text style={styles.pickText}>Pick Random Game</Text>
+      </Pressable>
+
+      {loading && <Text style={styles.loadingText}>Loading...</Text>}
+      {error && <Text style={styles.errorText}>{error}</Text>}
+
+      <GameCard game={game} />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#1e2c4e",
   },
-
-  button: {
-    backgroundColor: '#007AFF',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 20,
+      color: "#9ea0ff"
   },
-
-  buttonText: {
-    color: '#fff',
+  slogan: {
     fontSize: 16,
-    fontWeight: 'bold',
+    color: "#9ea0ff",
+    marginBottom: 30,
   },
-
-
+  subtext: {
+    fontSize: 14,
+    color: "#9ea0ff",
+    marginBottom: 30,
+    paddingHorizontal: 20,
+    textAlign: "center",
+  },
+  pickButton: {
+    backgroundColor: "#9ea0ff",
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  pickText: {
+    color: "#1e2c4e",
+    fontWeight: "bold",
+  },
+  loadingText: {
+    color: "#9ea0ff",
+    marginBottom: 20,
+  },
+  errorText: {
+    color: "#ff4d4d",
+    marginBottom: 20,
+  },
 });
